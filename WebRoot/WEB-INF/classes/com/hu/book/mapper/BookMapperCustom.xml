@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hu.book.mapper.BookMapperCustom" >
+	<sql id="query_book_where">
+			<if test="bookname!=null and bookname!=''">
+				and  bookname like '%${bookname}%'
+			</if>
+			<if test="author!=null and author!=''">
+				and author like '%${author}%'
+			</if>
+			<if test="classify!=null and classify!=''">
+				and classify = #{classify}
+			</if>
+	</sql>
+	<!-- 全查 -->
+  <select id="findAllBook"  resultType="book">
+  	select * from book
+  </select>
+  
+  <!--分页查询  -->
+  <select id="bookByFen"   resultType="book"  parameterType="java.lang.Integer">
+		select * from book limit #{index},5
+	</select>
+	
+	<select id="findbookList" parameterType="book" 
+			resultType="book">
+		SELECT * FROM book 
+		<where>
+			<include refid="query_book_where"/>
+		</where>
+	</select>
+	
+	<select id="bookByIdenty"  resultType="book" parameterType="string">
+  	select * from book where bookidenty = #{bookidenty}
+  </select>
+</mapper>

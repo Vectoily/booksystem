@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hu.book.mapper.BorrowMapperCustom" >
+	<resultMap type="user" id="userBorrowBook">
+		<id column="id" property="code"/>
+		<result column="student_id" property="code"/>
+		<result column="number" property="number"/>
+		<result column="name" property="name"/>
+		<collection property="bookList" ofType="com.hu.book.model.Book">
+				<id column="book_id" property="id"/>
+				<result column="bookidenty" property="bookidenty"/>
+				<result column="author" property="author"/>
+				<result column="bookname" property="bookname"/>
+				<result column="price" property="price"/>
+		</collection>
+		<collection property="borrowList" ofType="com.hu.book.model.Borrow">
+				<id column="id" property="id"/>
+				<result column="lentime" property="lentime"/>
+				<result column="returntime" property="returntime"/>
+				<result column="backtime" property="backtime"/>
+				<result column="money" property="money"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="query_borrow_where">
+			<if test="bookidenty!=null and bookidenty!=''">
+				and  bookidenty like '%${bookidenty}%'
+			</if>
+			<if test="bookname!=null and bookname!=''">
+				and  bookname like '%${bookname}%'
+			</if>
+			<if test="author!=null and author!=''">
+				and author like '%${author}%'
+			</if>
+	</sql>
+	
+	<select id="finduserBorrowBooks" resultMap="userBorrowBook">
+				SELECT 
+				  borrow.*,
+				  user.`number`,
+				  user.`name`,
+				  book.`bookidenty`,
+				  book.`bookname`,
+				  book.`author`,
+				  book.`price` 
+				FROM
+				  borrow,
+				  USER,
+				  book 
+				WHERE borrow.`book_id` = book.`id` 
+				  AND borrow.`student_id` = user.`code` 
+	</select>
+	
+	 <select id="borrowByfen" resultMap="userBorrowBook" parameterType="java.lang.Integer">
+			SELECT 
+				  borrow.*,
+				  user.`number`,
+				  user.`name`,
+				  book.`bookidenty`,
+				  book.`bookname`,
+				  book.`author`,
+				  book.`price` 
+				FROM
+				  borrow,
+				  USER,
+				  book 
+				WHERE borrow.`book_id` = book.`id` 
+				  AND borrow.`student_id` = user.`code` 
+				  limit #{index},5
+	</select>
+	 <select id="findoneBorrow" resultMap="userBorrowBook" parameterType="string">
+				SELECT 
+				  borrow.*,
+				  user.`number`,
+				  user.`name`,
+				  book.`bookidenty`,
+				  book.`bookname`,
+				  book.`author`,
+				  book.`price` 
+				FROM
+				  borrow,
+				  USER,
+				  book 
+				WHERE 
+				bookidenty = #{0} AND number = #{1}
+				AND
+				borrow.`book_id` = book.`id` 
+				AND borrow.`student_id` = user.`code` 
+	</select>
+	
+	 <select id="multicheckBorrow" resultMap="userBorrowBook" parameterType="book">
+			SELECT 
+				  borrow.*,
+				  user.`number`,
+				  user.`name`,
+				  book.`bookidenty`,
+				  book.`bookname`,
+				  book.`author`,
+				  book.`price` 
+				FROM
+				  borrow,
+				  USER,
+				  book 
+				WHERE borrow.`book_id` = book.`id` 
+				  AND borrow.`student_id` = user.`code` 
+				<include refid="query_borrow_where"></include>
+	</select>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hu.book.mapper.ClassifyMapperCustom" >
+	<resultMap type="classify" id="bookclassify">
+		<id column="id" property="id"/>
+		<result column="classname" property="classname"/>
+		<result column="brief" property="brief"/>
+		<collection property="bookList" ofType="com.hu.book.model.Book">
+				<id column="book_id" property="id"/>
+				<result column="bookidenty" property="bookidenty"/>
+				<result column="author" property="author"/>
+				<result column="bookname" property="bookname"/>
+				<result column="price" property="price"/>
+		</collection>
+		</resultMap>
+	<sql id="query_classify_where">
+			<if test="classname!=null and classname!=''">
+				and  classname like '%${classname}%'
+			</if>
+	</sql>
+	
+ 	<select id="findAllClass"  resultType="classify">
+  	select * from classify
+  </select>
+  
+   <select id="classByFen"   resultType="classify"  parameterType="java.lang.Integer">
+		select * from classify limit #{index},5
+	</select>
+	
+	<select id="findByMo"  resultType="classify" parameterType="classify">
+		select * from classify 
+		<where>
+			<include refid="query_classify_where"/>
+		</where>
+	</select>
+</mapper>

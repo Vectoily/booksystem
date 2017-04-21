@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hu.book.mapper.UserMapperCustom" >
+	
+	<sql id="query_user_where">
+			<if test="name!=null and name!=''">
+				and  name like '%${name}%'
+			</if>
+			<if test="number!=null and number!=''">
+				and number like '%${number}%'
+			</if>
+			<if test="phone!=null and phone!=''">
+				and phone like '%${phone}%'
+			</if>
+	</sql>
+	
+	<select id="LoginUser" parameterType="userCustom" resultType="user">
+		SELECT * FROM user where name=#{name} and password= #{password}
+	</select>
+	
+	<select id="findAllUser" resultType="user">
+		select * from user
+	</select>
+	
+	  <select id="userByFen"   resultType="user"  parameterType="java.lang.Integer">
+		select * from user limit #{index},5
+	</select>
+	
+	<select id="multicheckUser"  resultType="user" parameterType="user">
+		select * from user
+		<where>
+			<include refid="query_user_where"/>
+		</where>
+	</select>
+	
+	  <select id="userBynumber"   resultType="user"  parameterType="string">
+		select * from user where number=#{number}
+	</select>
+</mapper>
